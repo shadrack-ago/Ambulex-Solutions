@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ambulex Voice AI — Emergency Response, Reimagined</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <elevenlabs-convai agent-id="agent_1001kjvpfxcrez8tp12bb5xfy6ma"></elevenlabs-convai>
+  <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red: #FF2D2D;
+      --red-dim: #CC1F1F;
+      --red-glow: rgba(255, 45, 45, 0.18);
+      --bg: #080A0F;
+      --surface: #0F1219;
+      --border: rgba(255,255,255,0.07);
+      --text: #F0F2F8;
+      --muted: #7A7F92;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 48px;
+      background: rgba(8,10,15,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px;
+      letter-spacing: -0.3px;
+    }
+    .nav-logo .dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 12px var(--red);
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+    .nav-badge {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
+      color: var(--red); border: 1px solid var(--red);
+      padding: 3px 10px; border-radius: 20px;
+      text-transform: uppercase;
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Background grid */
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,45,45,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,45,45,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+    }
+
+    /* Radial glow */
+    .hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 40%, rgba(255,45,45,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 12px; font-weight: 500; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--red);
+      border: 1px solid rgba(255,45,45,0.3);
+      background: rgba(255,45,45,0.06);
+      padding: 6px 16px; border-radius: 20px;
+      margin-bottom: 32px;
+      animation: fadeUp 0.7s ease both;
+    }
+    .hero-eyebrow .blink {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--red);
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(42px, 7vw, 84px);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -2px;
+      max-width: 900px;
+      animation: fadeUp 0.8s 0.1s ease both;
+    }
+    h1 .accent { color: var(--red); }
+    h1 .light { color: var(--muted); }
+
+    .hero-sub {
+      margin-top: 24px;
+      font-size: 18px; font-weight: 300; color: var(--muted);
+      max-width: 560px; line-height: 1.7;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    /* WIDGET AREA */
+    .widget-wrap {
+      margin-top: 56px;
+      display: flex; flex-direction: column; align-items: center; gap: 20px;
+      animation: fadeUp 0.8s 0.35s ease both;
+      position: relative; z-index: 10;
+    }
+    .widget-label {
+      font-size: 12px; font-weight: 500; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .widget-card {
+      position: relative;
+      background: #ffffff;
+      border-radius: 28px;
+      padding: 40px 56px 48px;
+      display: flex; flex-direction: column; align-items: center; gap: 0;
+      min-width: 340px;
+      box-shadow:
+        0 0 0 1px rgba(255,45,45,0.25),
+        0 0 60px rgba(255,45,45,0.2),
+        0 24px 80px rgba(0,0,0,0.7);
+    }
+    .widget-card-label {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px; font-weight: 800;
+      color: #111; letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .widget-card-hint {
+      font-size: 13px; color: #888;
+      margin-bottom: 32px;
+    }
+    /* Big red mic button area */
+    .widget-mic-area {
+      position: relative;
+      width: 120px; height: 120px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 24px;
+    }
+    .widget-mic-bg {
+      display: none;
+    }
+    .widget-mic-icon {
+      display: none;
+    }
+    /* Overlay the elevenlabs widget on top of our big button */
+    .widget-overlay {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10;
+    }
+    elevenlabs-convai {
+      /* Custom styling removed - widget now has normal behavior */
+    }
+    .widget-status {
+      font-size: 13px; color: #CC1F1F;
+      font-weight: 600; letter-spacing: 0.05em;
+    }
+
+    /* STATS */
+    .stats {
+      display: flex; gap: 0;
+      margin-top: 72px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--surface);
+      animation: fadeUp 0.8s 0.45s ease both;
+    }
+    .stat {
+      flex: 1; padding: 28px 36px;
+      border-right: 1px solid var(--border);
+      text-align: center;
+    }
+    .stat:last-child { border-right: none; }
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 32px; font-weight: 800;
+      color: var(--text);
+    }
+    .stat-num span { color: var(--red); }
+    .stat-label {
+      font-size: 12px; color: var(--muted);
+      margin-top: 4px; letter-spacing: 0.05em;
+    }
+
+    /* HOW IT WORKS */
+    .section {
+      max-width: 1100px; margin: 0 auto;
+      padding: 100px 24px;
+    }
+    .section-tag {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--red);
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 800; letter-spacing: -1px;
+      margin-bottom: 56px;
+      max-width: 600px;
+    }
+    .section-title .dim { color: var(--muted); }
+
+    .steps {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 2px; background: var(--border);
+      border-radius: 16px; overflow: hidden;
+    }
+    .step {
+      background: var(--surface);
+      padding: 40px 32px;
+      position: relative;
+      transition: background 0.3s;
+    }
+    .step:hover { background: #141820; }
+    .step-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 48px; font-weight: 800;
+      color: rgba(255,45,45,0.15);
+      line-height: 1; margin-bottom: 20px;
+    }
+    .step-icon {
+      font-size: 28px; margin-bottom: 16px;
+    }
+    .step-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px; font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .step-desc {
+      font-size: 14px; color: var(--muted); line-height: 1.65;
+    }
+
+    /* FEATURES */
+    .features {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 2px; background: var(--border);
+      border-radius: 16px; overflow: hidden;
+      margin-top: 100px;
+    }
+    .feature {
+      background: var(--surface);
+      padding: 40px;
+      transition: background 0.3s;
+    }
+    .feature:hover { background: #141820; }
+    .feature-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      background: rgba(255,45,45,0.1);
+      border: 1px solid rgba(255,45,45,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; margin-bottom: 20px;
+    }
+    .feature-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 17px; font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .feature-desc {
+      font-size: 14px; color: var(--muted); line-height: 1.7;
+    }
+
+    /* CTA */
+    .cta-section {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 24px 120px;
+    }
+    .cta-box {
+      border-radius: 24px;
+      border: 1px solid rgba(255,45,45,0.25);
+      background: linear-gradient(135deg, rgba(255,45,45,0.08) 0%, rgba(8,10,15,0) 60%);
+      padding: 72px 64px;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .cta-box::before {
+      content: '';
+      position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
+      width: 400px; height: 200px;
+      background: radial-gradient(ellipse, rgba(255,45,45,0.15), transparent 70%);
+    }
+    .cta-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 800; letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+    .cta-sub {
+      color: var(--muted); font-size: 16px;
+      margin-bottom: 40px; max-width: 500px;
+      margin-left: auto; margin-right: auto;
+    }
+    .cta-ussd {
+      display: inline-flex; align-items: center; gap: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      border-radius: 12px; padding: 16px 28px;
+      font-family: 'Syne', sans-serif;
+      font-size: 22px; font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .cta-ussd .label {
+      font-size: 11px; font-weight: 400;
+      color: var(--muted); letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 48px;
+      display: flex; align-items: center; justify-content: space-between;
+      color: var(--muted); font-size: 13px;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--red); }
+      50%       { opacity: 0.5; box-shadow: 0 0 2px var(--red); }
+    }
+    @keyframes ripple {
+      0%   { transform: scale(0.8); opacity: 0.5; }
+      100% { transform: scale(1.3); opacity: 0; }
+    }
+    @keyframes micPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255,45,45,0.4), 0 8px 30px rgba(255,45,45,0.4); }
+      50%       { box-shadow: 0 0 0 18px rgba(255,45,45,0), 0 8px 30px rgba(255,45,45,0.2); }
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 16px 20px; }
+      .steps { grid-template-columns: 1fr; }
+      .features { grid-template-columns: 1fr; }
+      .stats { flex-direction: column; }
+      .stat { border-right: none; border-bottom: 1px solid var(--border); }
+      .cta-box { padding: 48px 24px; }
+      footer { flex-direction: column; gap: 12px; text-align: center; }
+
+      /* Widget card responsive fixes */
+      .widget-card {
+        min-width: auto;
+        width: 100%;
+        max-width: 340px;
+        padding: 32px 24px 36px;
+      }
+      .widget-wrap {
+        width: 100%;
+        padding: 0 16px;
+      }
+      .hero {
+        padding: 100px 16px 60px;
+      }
+      .hero-sub {
+        font-size: 16px;
+      }
+      h1 {
+        letter-spacing: -1px;
+      }
+      .cta-ussd {
+        padding: 14px 20px;
+        font-size: 18px;
+      }
+      .section {
+        padding: 60px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="dot"></div>
+    Ambulex Solutions
+  </div>
+  <div class="nav-badge">Voice AI Demo</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">
+    <span class="blink"></span>
+    Powered by Custom CX
+  </div>
+  <h1>Emergency Response,<br><span class="accent">Voice-First.</span><br><span class="light">Always On.</span></h1>
+  <p class="hero-sub">
+    Speak to Ambulex's AI agent — get instant triage guidance, dispatch coordination, and emergency support. No app needed. No waiting.
+  </p>
+
+  <div class="widget-wrap">
+    <span class="widget-label">Tap to speak with our AI agent</span>
+    <div class="widget-card">
+      <span class="widget-card-label">🎙️ Ambulex Voice Agent</span>
+      <span class="widget-card-hint">Click the red button to start talking</span>
+      <div class="widget-mic-area">
+        <div class="widget-mic-bg"></div>
+        <span class="widget-mic-icon">🎤</span>
+        <div class="widget-overlay">
+          <elevenlabs-convai agent-id="agent_1001kjvpfxcrez8tp12bb5xfy6ma"></elevenlabs-convai>
+        </div>
+      </div>
+      <span class="widget-status">● Ready to listen</span>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-num">24<span>/7</span></div>
+      <div class="stat-label">Always Available</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">&lt;<span>2</span>min</div>
+      <div class="stat-label">Response Time</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">100<span>%</span></div>
+      <div class="stat-label">Emergency Coverage</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">47<span>+</span></div>
+      <div class="stat-label">Partner Hospitals</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section">
+  <div class="section-tag">How It Works</div>
+  <div class="section-title">Three steps from <span class="dim">crisis to care.</span></div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-icon">🎙️</div>
+      <div class="step-title">Speak or Call</div>
+      <div class="step-desc">Use our AI voice agent here, dial *789*189#, or use our app. Describe your emergency in any language — Swahili or English.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-icon">🧠</div>
+      <div class="step-title">AI Triage</div>
+      <div class="step-desc">Our voice AI instantly assesses the situation — severity, location, and type of emergency — and routes it to the right response team.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-icon">🚑</div>
+      <div class="step-title">Dispatch & Care</div>
+      <div class="step-desc">EMTs, ambulances, or community first responders are dispatched to your location. You stay guided by the AI until help arrives.</div>
+    </div>
+  </div>
+
+  <div class="features">
+    <div class="feature">
+      <div class="feature-icon">🤱</div>
+      <div class="feature-title">Maternal Emergency Support</div>
+      <div class="feature-desc">Specialized voice flows for pregnancy emergencies — real-time guidance for mothers, midwives, and community health workers in underserved areas.</div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">💔</div>
+      <div class="feature-title">GBV Response Line</div>
+      <div class="feature-desc">Discreet, compassionate AI support for gender-based violence survivors. Silent call options and direct routing to specialized response teams.</div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">⚡</div>
+      <div class="feature-title">Advanced Life Support Triage</div>
+      <div class="feature-desc">Cardiac arrest, trauma, and critical care — the AI guides callers through first-aid steps while dispatching advanced EMTs simultaneously.</div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🗺️</div>
+      <div class="feature-title">Last-Mile Reach</div>
+      <div class="feature-desc">Built for Kenya's informal settlements. Works on basic phones via USSD and voice — no smartphone, no internet, no barriers to access.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-box">
+    <div class="cta-title">Ready to experience it?</div>
+    <p class="cta-sub">Talk to the AI agent above, or reach our emergency line anytime — day or night.</p>
+    <div class="cta-ussd">
+      <div>
+        <div class="label">Emergency USSD</div>
+        *789*189#
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2025 Ambulex Solutions · Nairobi, Kenya</span>
+  <span>info@ambulexsolutions.org · +254 702 898 989</span>
+</footer>
+
+</body>
+</html>
